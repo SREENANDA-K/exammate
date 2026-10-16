@@ -17,9 +17,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS setup
+// CORS setup
 app.use(
   cors({
-    origin: '*',
+    origin: [
+      'https://exammate-frontend3.vercel.app',
+      'http://localhost:5173',
+      'http://localhost:3000'
+    ],
     credentials: true,
   })
 );
