@@ -13,7 +13,10 @@ import {
 } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
 
-export const Sidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> = ({ isOpen, onClose }) => {
+export const Sidebar: React.FC<{
+  isOpen?: boolean;
+  onClose?: () => void;
+}> = ({ isOpen, onClose }) => {
   const { unreadCount } = useNotifications();
 
   const navItems = [
@@ -34,43 +37,52 @@ export const Sidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> = ({ 
       {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/40 z-40 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm dark:bg-black/60 lg:hidden"
           onClick={onClose}
+          aria-hidden="true"
         />
       )}
 
+      {/* Sidebar */}
       <aside
-        className={`fixed lg:static top-0 left-0 bottom-0 z-40 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out flex flex-col justify-between ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed bottom-0 left-0 top-0 z-40 flex w-64 flex-col justify-between border-r border-slate-200 bg-white transition-colors duration-200 dark:border-slate-800 dark:bg-slate-950 lg:static ${
+          isOpen
+            ? 'translate-x-0'
+            : '-translate-x-full lg:translate-x-0'
+        } transform transition-transform ease-in-out duration-200`}
       >
-        <div className="p-4 space-y-1.5 overflow-y-auto pt-6">
+        {/* Navigation links */}
+        <div className="space-y-1.5 overflow-y-auto p-4 pt-6">
           <div className="px-3 pb-3">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400">Navigation</span>
+            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              Navigation
+            </span>
           </div>
 
           {navItems.map((item) => {
             const Icon = item.icon;
+
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
                 onClick={onClose}
                 className={({ isActive }) =>
-                  `flex items-center justify-between px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+                  `flex items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all ${
                     isActive
-                      ? 'bg-brand-50 text-brand-600 font-bold shadow-sm'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-brand-50 font-bold text-brand-700 shadow-sm dark:bg-brand-500/15 dark:text-orange-400'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
                   }`
                 }
               >
                 <div className="flex items-center space-x-3">
-                  <Icon className="w-5 h-5" />
+                  <Icon className="h-5 w-5 shrink-0" />
                   <span>{item.label}</span>
                 </div>
+
                 {item.badge !== undefined && item.badge > 0 && (
-                  <span className="px-2 py-0.5 text-xs font-bold bg-brand-500 text-white rounded-full">
-                    {item.badge}
+                  <span className="rounded-full bg-brand-500 px-2 py-0.5 text-xs font-bold text-white">
+                    {item.badge > 99 ? '99+' : item.badge}
                   </span>
                 )}
               </NavLink>
@@ -78,14 +90,20 @@ export const Sidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> = ({ 
           })}
         </div>
 
-        <div className="p-4 border-t border-slate-100 bg-slate-50/50 m-3 rounded-2xl border">
+        {/* Footer */}
+        <div className="m-3 rounded-2xl border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 font-bold text-brand-700 dark:bg-brand-500/20 dark:text-orange-400">
               EM
             </div>
+
             <div>
-              <p className="text-xs font-bold text-slate-800">ExamMate v1.0</p>
-              <p className="text-[11px] text-slate-500">Adaptive Assistant</p>
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
+                ExamMate v1.0
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Adaptive Assistant
+              </p>
             </div>
           </div>
         </div>

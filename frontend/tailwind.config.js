@@ -1,6 +1,11 @@
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+
+  // Enable manual Light Mode / Dark Mode switching
+  darkMode: 'class',
+
   theme: {
     extend: {
       colors: {
@@ -10,7 +15,7 @@ export default {
           200: '#fed7aa',
           300: '#fdba74',
           400: '#fb923c',
-          500: '#F37021', // Primary requested color
+          500: '#F37021',
           600: '#ea580c',
           700: '#c2410c',
           800: '#9a3412',
@@ -19,5 +24,6 @@ export default {
       },
     },
   },
+
   plugins: [],
 };

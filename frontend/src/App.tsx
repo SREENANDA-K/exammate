@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeToggle } from './components/ThemeToggle';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -24,6 +25,7 @@ export const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <NotificationProvider>
+          <ThemeToggle />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />

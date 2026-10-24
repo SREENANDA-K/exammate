@@ -1,10 +1,30 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-800 antialiased min-h-screen;
+    @apply min-h-screen bg-slate-50 text-slate-800 antialiased transition-colors duration-200;
+  }
+
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  .dark input,
+  .dark textarea,
+  .dark select {
+    @apply border-slate-700 bg-slate-900 text-slate-100;
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    @apply text-slate-400;
   }
 }
 
@@ -13,13 +33,29 @@
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
