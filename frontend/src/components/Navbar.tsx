@@ -111,7 +111,7 @@ export const Navbar: React.FC<{ onToggleSidebar?: () => void }> = ({
                   </div>
 
                   <Link
-                    to="/onboarding"
+                    to="/settings"
                     className="flex items-center px-4 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
                     onClick={() => setDropdownOpen(false)}
                   >
