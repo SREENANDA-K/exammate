@@ -1,7 +1,15 @@
+
 import React from 'react';
 import { ThemeToggle } from './components/ThemeToggle';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
+
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -20,19 +28,82 @@ import { ProgressPage } from './pages/ProgressPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { SettingsPage } from './pages/SettingsPage';
 
+const HomeRedirect: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center space-y-3">
+          <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-semibold text-slate-500">
+            Loading ExamMate...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return user ? <Navigate to="/dashboard" replace /> : <LandingPage />;
+};
+
+const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-sm font-semibold text-slate-500">
+          Loading ExamMate...
+        </p>
+      </div>
+    );
+  }
+
+  if (user) {
+    const from = (location.state as { from?: { pathname?: string } } | null)
+      ?.from?.pathname;
+
+    return <Navigate to={from || '/dashboard'} replace />;
+  }
+
+  return <>{children}</>;
+};
+
 export const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider>
         <NotificationProvider>
           <ThemeToggle />
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
 
-            {/* Authenticated Protected Routes */}
+          <Routes>
+            {/* Home: dashboard for logged-in users, landing page otherwise */}
+            <Route path="/" element={<HomeRedirect />} />
+
+            {/* Public routes: only for logged-out users */}
+            <Route
+              path="/login"
+              element={
+                <PublicOnlyRoute>
+                  <LoginPage />
+                </PublicOnlyRoute>
+              }
+            />
+
+            <Route
+              path="/signup"
+              element={
+                <PublicOnlyRoute>
+                  <SignUpPage />
+                </PublicOnlyRoute>
+              }
+            />
+
+            {/* Authenticated protected routes */}
             <Route
               path="/onboarding"
               element={
@@ -41,6 +112,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/syllabus-upload"
               element={
@@ -49,6 +121,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/syllabus-overview"
               element={
@@ -57,6 +130,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/dashboard"
               element={
@@ -65,6 +139,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/timetable"
               element={
@@ -73,6 +148,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/regular-study"
               element={
@@ -81,6 +157,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/exam-prep"
               element={
@@ -89,6 +166,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/exams"
               element={
@@ -97,6 +175,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/progress"
               element={
@@ -105,6 +184,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/notifications"
               element={
@@ -113,6 +193,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/settings"
               element={
@@ -122,7 +203,7 @@ export const App: React.FC = () => {
               }
             />
 
-            {/* Fallback */}
+            {/* Unknown routes */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </NotificationProvider>
